@@ -1,0 +1,22 @@
+{
+  "name": "mawards-backend",
+  "version": "1.0.0",
+  "description": "MierAwards Backend Service",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm start"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JEFTEDARIEL123/MierAwards-Backend.git"
+  },
+  "author": "Jeft",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JEFTEDARIEL123/MierAwards-Backend/issues"
+  },
+  "homepage": "https://github.com/JEFTEDARIEL123/MierAwards-Backend#readme",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
