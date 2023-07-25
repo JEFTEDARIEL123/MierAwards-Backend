@@ -9,48 +9,89 @@ const ADDR = process.env.ADDRESS;
 const Mongodb = process.env.MONGODB
 const cors = require('cors');
 const colors = require('colors');
-// Configura bodyParser para procesar datos en formato JSON
-app.use(bodyParser.json(), cors());
+
+app.use(bodyParser.json());
+app.use(cors());
+
 const version = "0.1 Beta"
-// Establece la conexión a la base de datos de MongoDB
+
 mongoose.connect(Mongodb, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
 mongoose.connection.on('connected', () => {
-  console.log('[ MaWardsBackend ] '.yellow +'Conexion con Mongodb realizada');
+  console.log('[ MaWardsBackend ] '.yellow + 'Conexion con Mongodb realizada');
 });
 
-// Definir el modelo del formulario utilizando Mongoose
-const formSchema = new mongoose.Schema({
-  option: String,
-  nickname: String,
-});
+const formSchema = new mongoose.Schema(
+  {
+    option: String,
+    cat1: String,
+    cat2: String,
+    nickname: String,
+  },
+  { strict: false }
+);
 
 const Form = mongoose.model('Form', formSchema);
 
-// Definir la ruta para recibir los datos del formulario
-app.post('/api/form', (req, res) => {
-  const { option, nickname } = req.body;
+app.get('/api/form/:userNickname', (req, res) => {
+  const { userNickname } = req.params;
 
-  // Crea un nuevo documento utilizando el modelo de Mongoose
-  const newForm = new Form({ option, nickname });
-
-  // Guarda el documento en la base de datos
-  newForm.save()
-    .then((savedForm) => {
-      console.log('[ MaWardsBackend ] '.yellow + 'Formulario guardado correctamente'.green , savedForm);
-      res.status(200).json({ message: '[ MaWardsBackend ] Formulario guardado correctamente' });
+  Form.findOne({ nickname: userNickname })
+    .then((userResponse) => {
+      if (userResponse) {
+        res.status(200).json(userResponse);
+      } else {
+        res.status(200).json({ answers: {} });
+      }
     })
     .catch((error) => {
-      console.error('[ MaWardsBackend ] '.yellow + 'Error al guardar el formulario'.red , error);
-      res.status(500).json({ error: '[ MaWardsBackend ] Error al guardar el formulario' });
+      console.error('Error al obtener la respuesta del usuario:', error);
+      res.status(500).json({ error: 'Error al obtener la respuesta del usuario' });
     });
 });
 
-// Iniciar el servidor
+app.post('/api/form', (req, res) => {
+  const { cat1, cat2, option, nickname } = req.body;
+
+  Form.findOne({ nickname })
+    .then((existingForm) => {
+      if (existingForm) {
+        existingForm.option = option;
+        existingForm.cat1 = cat1;
+        existingForm.cat2 = cat2;
+        existingForm.nickname = nickname;
+        existingForm.save()
+          .then((updatedForm) => {
+            console.log('Formulario actualizado correctamente', updatedForm);
+            res.status(200).json({ message: 'Formulario actualizado correctamente' });
+          })
+          .catch((error) => {
+            console.error('Error al actualizar el formulario:', error);
+            res.status(500).json({ error: 'Error al actualizar el formulario' });
+          });
+      } else {
+        const newForm = new Form({ option, cat1, cat2, nickname });
+
+        newForm.save()
+          .then((savedForm) => {
+            console.log('Formulario guardado correctamente', savedForm);
+            res.status(200).json({ message: 'Formulario guardado correctamente' });
+          })
+          .catch((error) => {
+            console.error('Error al guardar el formulario:', error);
+            res.status(500).json({ error: 'Error al guardar el formulario' });
+          });
+      }
+    })
+    .catch((error) => {
+      console.error('Error al buscar el formulario:', error);
+      res.status(500).json({ error: 'Error al buscar el formulario' });
+    });
+});
+
 var server = app.listen(PORT, ADDR,  function () {
-  
   const appPort = server.address().port
   const appAddr = server.address().address
   console.log('=========================================')
@@ -61,4 +102,3 @@ var server = app.listen(PORT, ADDR,  function () {
   console.log('=========================================')
   console.log(' ')
 });
-
