@@ -53,14 +53,18 @@ app.get('/api/form/:userNickname', (req, res) => {
 });
 
 app.post('/api/form', (req, res) => {
-  const { cat1, cat2, option, nickname } = req.body;
+  const { cat1, cat2, nickname } = req.body;
 
   Form.findOne({ nickname })
     .then((existingForm) => {
       if (existingForm) {
-        existingForm.option = option;
-        existingForm.cat1 = cat1;
-        existingForm.cat2 = cat2;
+        // Actualizar solo los campos que se enviaron en la solicitud
+        if (cat1) {
+          existingForm.cat1 = cat1;
+        }
+        if (cat2) {
+          existingForm.cat2 = cat2;
+        }
         existingForm.nickname = nickname;
         existingForm.save()
           .then((updatedForm) => {
@@ -72,7 +76,7 @@ app.post('/api/form', (req, res) => {
             res.status(500).json({ error: 'Error al actualizar el formulario' });
           });
       } else {
-        const newForm = new Form({ option, cat1, cat2, nickname });
+        const newForm = new Form({ cat1, cat2, nickname });
 
         newForm.save()
           .then((savedForm) => {
