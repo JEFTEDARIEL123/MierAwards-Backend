@@ -13,7 +13,7 @@ const colors = require('colors');
 app.use(bodyParser.json());
 app.use(cors());
 
-const version = "V0.5 Beta"
+const version = "1.0 Release"
 
 mongoose.connect(Mongodb, {
   useNewUrlParser: true,
@@ -28,7 +28,6 @@ const formSchema = new mongoose.Schema(
     option: String,
     frescoleche: String,
     apodo: String,
-    sobo: String,
     glowup: String,
     racista: String,
     pareja:String,
@@ -51,6 +50,10 @@ const formSchema = new mongoose.Schema(
     chismoso: String,
     asaltasilos: String,
     desvelado: String,
+    abuelo: String,
+    artista: String,
+    hater: String,
+    duo: String,
     nickname: String,
   },
   { strict: false }
@@ -77,7 +80,7 @@ app.get('/api/form/:userNickname', (req, res) => {
 });
 
 app.post('/api/form', (req, res) => {
-  const { frescoleche, apodo, sobo, glowup, racista, pareja, divertido, aesthetic, profesor, fiestero, inteligente, momentoaño, ausente, grupito, atletico, pipi, empayazado, ship, fiel, infiel, lagarto, toxico, chismoso, asaltasilos, desvelado, nickname } = req.body;
+  const { frescoleche, apodo, glowup, racista, pareja, divertido, aesthetic, profesor, fiestero, inteligente, momentoaño, ausente, grupito, atletico, pipi, empayazado, ship, fiel, infiel, lagarto, toxico, chismoso, asaltasilos, desvelado, abuelo, artista, hater, duo, nickname } = req.body;
 
   Form.findOne({ nickname })
     .then((existingForm) => {
@@ -89,10 +92,6 @@ app.post('/api/form', (req, res) => {
         
         if (apodo) {
           existingForm.apodo = apodo;
-        }
-        
-        if (sobo) {
-          existingForm.sobo = sobo;
         }
         
         if (glowup) {
@@ -125,10 +124,6 @@ app.post('/api/form', (req, res) => {
         
         if (inteligente) {
           existingForm.inteligente = inteligente;
-        }
-        
-        if (momentoaño) {
-          existingForm.momentoaño = momentoaño;
         }
         
         if (ausente) {
@@ -182,6 +177,22 @@ app.post('/api/form', (req, res) => {
         if (desvelado) {
           existingForm.desvelado = desvelado;
         }
+
+        if (abuelo) {
+          existingForm.abuelo = abuelo;
+        }
+
+        if (artista) {
+          existingForm.artista = artista;
+        }
+
+        if (hater) {
+          existingForm.hater = hater;
+        }
+
+        if (duo) {
+          existingForm.duo = duo;
+        }
         existingForm.nickname = nickname;
         existingForm.save()
           .then((updatedForm) => {
@@ -193,7 +204,7 @@ app.post('/api/form', (req, res) => {
             res.status(500).json({ error: 'Error al actualizar el formulario' });
           });
       } else {
-        const newForm = new Form({ frescoleche, apodo, sobo, glowup, racista, pareja, divertido, aesthetic, profesor, fiestero, inteligente, momentoaño, ausente, grupito, atletico, pipi, empayazado, ship, fiel, infiel, lagarto, toxico, chismoso, asaltasilos, desvelado, nickname});
+        const newForm = new Form({ frescoleche, apodo, glowup, racista, pareja, divertido, aesthetic, profesor, fiestero, inteligente, momentoaño, ausente, grupito, atletico, pipi, empayazado, ship, fiel, infiel, lagarto, toxico, chismoso, asaltasilos, desvelado, nickname});
 
         newForm.save()
           .then((savedForm) => {
