@@ -207,7 +207,7 @@ app.post('/api/form', (req, res) => {
             res.status(500).json({ error: 'Error al actualizar el formulario' });
           });
       } else {
-        const newForm = new Form({ frescoleche, apodo, glowup, racista, pareja, divertido, aesthetic, profesor, fiestero, inteligente, momentoaño, ausente, grupito, atletico, pipi, empayazado, ship, fiel, infiel, lagarto, toxico, chismoso, asaltasilos, desvelado, nickname});
+        const { frescoleche, apodo, glowup, racista, pareja, divertido, aesthetic, profesor, fiestero, inteligente, momentoaño, ausente, grupito, atletico, pipi, empayazado, ship, fiel, infiel, lagarto, toxico, chismoso, asaltasilos, desvelado, abuelo, artista, hater, duo, nickname } = req.body;
 
         newForm.save()
           .then((savedForm) => {
