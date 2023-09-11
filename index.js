@@ -83,7 +83,7 @@ app.get('/api/form/:userNickname', (req, res) => {
 });
 
 app.post('/api/form', (req, res) => {
-  const newForm = new Form({ frescoleche, apodo, glowup, racista, pareja, divertido, aesthetic, profesor, fiestero, inteligente, momentoaño, ausente, grupito, atletico, pipi, empayazado, ship, fiel, infiel, lagarto, toxico, chismoso, asaltasilos, desvelado, abuelo, artista, hater, duo, nickname }) = req.body;
+  const { frescoleche, apodo, glowup, racista, pareja, divertido, aesthetic, profesor, fiestero, inteligente, momentoaño, ausente, grupito, atletico, pipi, empayazado, ship, fiel, infiel, lagarto, toxico, chismoso, asaltasilos, desvelado, abuelo, artista, hater, duo, nickname } = req.body;
 
   Form.findOne({ nickname })
     .then((existingForm) => {
